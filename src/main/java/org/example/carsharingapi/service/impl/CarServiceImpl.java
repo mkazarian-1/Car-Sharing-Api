@@ -29,7 +29,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarDto getById(Long id) {
         return carMapper.toDto(
-                carRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't find car with current id: " + id)));
+                carRepository.findById(id).orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Can't find car with current id: " + id)));
     }
 
     @Override
@@ -44,8 +46,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarDto update(Long id, UpdateRequestCarDto updateRequestCarDto) {
-        Car car = carRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't find car with current id: " + id));
-        carMapper.updateCar(updateRequestCarDto,car);
+        Car car = carRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find car with current id: " + id));
+        carMapper.updateCar(updateRequestCarDto, car);
         return carMapper.toDto(carRepository.save(car));
     }
 }

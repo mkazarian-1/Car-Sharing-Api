@@ -1,9 +1,9 @@
 package org.example.carsharingapi.dto.car;
 
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.carsharingapi.model.enumTypes.CarType;
-import java.math.BigDecimal;
+import org.example.carsharingapi.model.enums.CarType;
 
 @Getter
 @Setter

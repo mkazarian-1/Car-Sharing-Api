@@ -1,6 +1,6 @@
 package org.example.carsharingapi.security.impl;
 
-import jakarta.persistence.EntityNotFoundException;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.user.UserLoginRequestDto;
 import org.example.carsharingapi.dto.user.UserLoginResponseDto;
@@ -9,19 +9,15 @@ import org.example.carsharingapi.dto.user.UserResponseDto;
 import org.example.carsharingapi.exeption.RegistrationException;
 import org.example.carsharingapi.mapper.UserMapper;
 import org.example.carsharingapi.model.User;
-import org.example.carsharingapi.model.enumTypes.UserRole;
+import org.example.carsharingapi.model.enums.UserRole;
 import org.example.carsharingapi.repository.UserRepository;
 import org.example.carsharingapi.security.UserAuthenticationService;
 import org.example.carsharingapi.security.util.JwtUtil;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.MappingTarget;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

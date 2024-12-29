@@ -1,12 +1,9 @@
 package org.example.carsharingapi.dto.rental;
 
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.carsharingapi.model.Car;
-import org.example.carsharingapi.model.enumTypes.CarType;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @Setter

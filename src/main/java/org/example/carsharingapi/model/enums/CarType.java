@@ -1,4 +1,4 @@
-package org.example.carsharingapi.model.enumTypes;
+package org.example.carsharingapi.model.enums;
 
 public enum CarType {
     SEDAN,
