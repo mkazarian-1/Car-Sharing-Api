@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/init-changelog.yaml
+  - include:
+      file: db/changelog/changes/manager-insert-changelog.yaml
