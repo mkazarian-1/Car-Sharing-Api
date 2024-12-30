@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.user.UserLoginRequestDto;
 import org.example.carsharingapi.dto.user.UserLoginResponseDto;
 import org.example.carsharingapi.dto.user.UserRegistrationRequestDto;
-import org.example.carsharingapi.dto.user.UserResponseDto;
+import org.example.carsharingapi.dto.user.UserRegistrationResponseDto;
 import org.example.carsharingapi.exeption.RegistrationException;
 import org.example.carsharingapi.mapper.UserMapper;
 import org.example.carsharingapi.model.User;
@@ -29,7 +29,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     private final JwtUtil jwtUtil;
 
     @Override
-    public UserResponseDto register(UserRegistrationRequestDto requestDto) {
+    public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new RegistrationException("User with this email already exist");
         }
@@ -40,7 +40,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
 
         user = userRepository.save(user);
 
-        return userMapper.toDto(user);
+        return userMapper.toRegistrationResponseDto(user);
     }
 
     @Override

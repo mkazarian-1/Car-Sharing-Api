@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.user.UserLoginRequestDto;
 import org.example.carsharingapi.dto.user.UserLoginResponseDto;
 import org.example.carsharingapi.dto.user.UserRegistrationRequestDto;
-import org.example.carsharingapi.dto.user.UserResponseDto;
+import org.example.carsharingapi.dto.user.UserRegistrationResponseDto;
 import org.example.carsharingapi.exeption.RegistrationException;
 import org.example.carsharingapi.security.UserAuthenticationService;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,8 @@ public class AuthenticationController {
     //                    """)
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request)
+    public UserRegistrationResponseDto register(
+            @RequestBody @Valid UserRegistrationRequestDto request)
             throws RegistrationException {
         return userAuthenticationService.register(request);
     }
