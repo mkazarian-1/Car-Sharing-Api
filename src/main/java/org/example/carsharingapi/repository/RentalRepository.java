@@ -1,5 +1,7 @@
 package org.example.carsharingapi.repository;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.example.carsharingapi.model.Rental;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,11 @@ public interface RentalRepository extends JpaRepository<Rental,Long> {
             + "((:isActive = true AND r.actualReturnDate IS NULL) "
             + "OR (:isActive = false AND r.actualReturnDate IS NOT NULL))")
     Page<Rental> findRentalsByActivity(@Param("isActive") boolean isActive, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"user", "car"})
+    @Query("SELECT r FROM Rental r WHERE (r.actualReturnDate IS NULL) "
+            + "AND (r.returnDate < :expiryDate)")
+    List<Rental> findOverdueRentals(@Param("expiryDate") LocalDate expiryDate);
 
     @EntityGraph(attributePaths = {"user", "car"})
     Optional<Rental> findById(Long id);
