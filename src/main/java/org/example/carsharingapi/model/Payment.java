@@ -12,6 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.net.URL;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.example.carsharingapi.model.enums.PaymentStatus;
@@ -40,6 +42,8 @@ public class Payment {
     @Column(nullable = false)
     private BigDecimal amountToPay;
 
-    //TODO -- payment session credential
+    @Column(nullable = false)
+    private String sessionUrl;
+    @Column(nullable = false)
+    private String sessionId;
 }
-

@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = CarMapper.class)
 public interface RentalMapper {
     @Mapping(source = "user.id", target = "userId")
     RentalDto toDto(Rental rental);

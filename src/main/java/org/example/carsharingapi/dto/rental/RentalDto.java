@@ -3,6 +3,7 @@ package org.example.carsharingapi.dto.rental;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.carsharingapi.dto.car.CarDto;
 import org.example.carsharingapi.model.Car;
 
 @Getter
@@ -13,6 +14,6 @@ public class RentalDto {
     private LocalDate returnDate;
     private LocalDate actualReturnDate;
 
-    private Car car;
+    private CarDto car;
     private Long userId;
 }

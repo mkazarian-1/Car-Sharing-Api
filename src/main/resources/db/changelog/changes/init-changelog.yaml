@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1735138562472-1
+      id: 1735908195008-1
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -41,7 +41,7 @@ databaseChangeLog:
                   type: DECIMAL
             tableName: cars
   - changeSet:
-      id: 1735138562472-2
+      id: 1735908195008-2
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -75,9 +75,19 @@ databaseChangeLog:
                     nullable: false
                   name: amount_to_pay
                   type: DECIMAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: session_url
+                  type: VARCHAR(500)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: session_id
+                  type: VARCHAR(255)
             tableName: payments
   - changeSet:
-      id: 1735138562472-3
+      id: 1735908195008-3
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -116,7 +126,7 @@ databaseChangeLog:
                   type: BIGINT
             tableName: rentals
   - changeSet:
-      id: 1735138562472-4
+      id: 1735908195008-4
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -132,7 +142,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: user_roles
   - changeSet:
-      id: 1735138562472-5
+      id: 1735908195008-5
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -168,7 +178,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
             tableName: users
   - changeSet:
-      id: 1735138562472-6
+      id: 1735908195008-6
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -177,7 +187,7 @@ databaseChangeLog:
             constraintName: uc_payments_rental
             tableName: payments
   - changeSet:
-      id: 1735138562472-7
+      id: 1735908195008-7
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -186,7 +196,7 @@ databaseChangeLog:
             constraintName: uc_users_email
             tableName: users
   - changeSet:
-      id: 1735138562472-8
+      id: 1735908195008-8
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -197,7 +207,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: rentals
   - changeSet:
-      id: 1735138562472-9
+      id: 1735908195008-9
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -208,7 +218,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: cars
   - changeSet:
-      id: 1735138562472-10
+      id: 1735908195008-10
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -219,7 +229,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: users
   - changeSet:
-      id: 1735138562472-11
+      id: 1735908195008-11
       author: mkUser
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
