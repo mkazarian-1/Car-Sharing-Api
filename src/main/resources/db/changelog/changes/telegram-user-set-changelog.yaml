@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1736373906649-1
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_telegram_users
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: chat_id
+                  type: BIGINT
+            tableName: telegram_users
+  - changeSet:
+      id: 1736373906649-2
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: user_id
+            constraintName: uc_telegram_users_user
+            tableName: telegram_users
+  - changeSet:
+      id: 1736373906649-3
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: telegram_users
+            constraintName: FK_TELEGRAM_USERS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+

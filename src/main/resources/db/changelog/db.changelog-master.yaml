@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/init-changelog.yaml
   - include:
       file: db/changelog/changes/manager-insert-changelog.yaml
+  - include:
+      file: db/changelog/changes/telegram-user-set-changelog.yaml

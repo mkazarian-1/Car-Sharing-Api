@@ -4,6 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import org.example.carsharingapi.model.Rental;
 
-public interface OverdueRentalAnalysisService {
+public interface OverdueRentalProcessor {
     List<Rental> findOverdueRentals(LocalDate expiryDate);
 }

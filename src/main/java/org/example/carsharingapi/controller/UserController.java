@@ -24,20 +24,20 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    UserDto getCurrentUserInfo() {
+    public UserDto getCurrentUserInfo() {
         User user = UserUtil.getAuthenticatedUser();
         return userMapper.toDto(user);
     }
 
     @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("/{id}/role")
-    UserDto updateUserRole(@PathVariable Long id,
+    public UserDto updateUserRole(@PathVariable Long id,
                            @RequestBody UpdateUserRoleDto updateUserRoleDto) {
         return userService.updateUserRole(id, updateUserRoleDto);
     }
 
     @PutMapping("/me")
-    UserDto updateUserInfo(@RequestBody UpdateUserInfoDto updateUserInfoDto) {
+    public UserDto updateUserInfo(@RequestBody UpdateUserInfoDto updateUserInfoDto) {
         User user = UserUtil.getAuthenticatedUser();
         return userService.updateUserInfo(user, updateUserInfoDto);
     }

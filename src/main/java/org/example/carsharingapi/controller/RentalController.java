@@ -26,7 +26,7 @@ public class RentalController {
     private final RentalService rentalService;
 
     @GetMapping()
-    Page<RentalDto> getByUserIdAndActivity(
+    public Page<RentalDto> getByUserIdAndActivity(
             @RequestParam(name = "user_id", required = false,
                     defaultValue = "#{null}") Long userId,
             @RequestParam(name = "is_active", defaultValue = "true")
@@ -44,7 +44,7 @@ public class RentalController {
     }
 
     @GetMapping("/{id}")
-    RentalDto getById(@PathVariable Long id) {
+    public RentalDto getById(@PathVariable Long id) {
         User user = UserUtil.getAuthenticatedUser();
         if (user.getRoles().contains(UserRole.MANAGER)) {
             return rentalService.getById(id);
@@ -53,13 +53,13 @@ public class RentalController {
     }
 
     @PostMapping()
-    RentalDto addRental(@RequestBody @Valid CreateRequestRentalDto requestRentalDto) {
+    public RentalDto addRental(@RequestBody @Valid CreateRequestRentalDto requestRentalDto) {
         User user = UserUtil.getAuthenticatedUser();
         return rentalService.addRental(requestRentalDto, user);
     }
 
     @PostMapping("/return/{id}")
-    RentalDto setActualDate(@PathVariable Long id,
+    public RentalDto setActualDate(@PathVariable Long id,
                             @RequestBody @Valid UpdateRequestRentalDto requestRentalDto) {
         User user = UserUtil.getAuthenticatedUser();
         if (user.getRoles().contains(UserRole.MANAGER)) {
