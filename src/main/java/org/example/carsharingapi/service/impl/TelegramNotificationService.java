@@ -2,9 +2,6 @@ package org.example.carsharingapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.example.carsharingapi.dto.rental.RentalDto;
-import org.example.carsharingapi.model.User;
-import org.example.carsharingapi.repository.UserRepository;
 import org.example.carsharingapi.service.NotificationService;
 import org.example.carsharingapi.telegram.controller.TelegramController;
 import org.example.carsharingapi.telegram.model.TelegramUser;
@@ -17,7 +14,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class NotificationServiceImpl implements NotificationService {
+public class TelegramNotificationService implements NotificationService {
     private final TelegramController telegramController;
     private final TelegramUserRepository telegramUserRepository;
 

@@ -21,7 +21,6 @@ public class OverdueRentalAnalysisTask {
 
     @Async
     @Scheduled(cron = "0 0 1 * * ?")
-    @Scheduled(fixedDelay = 10000)
     public void analyzeRentals() {
         log.info("Starting rental analysis task at {}, by thread: {}",
                 LocalDateTime.now(),

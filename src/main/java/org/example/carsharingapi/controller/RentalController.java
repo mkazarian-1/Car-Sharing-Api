@@ -2,6 +2,7 @@ package org.example.carsharingapi.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.carsharingapi.aspects.annotation.NotifyOnCreateRental;
 import org.example.carsharingapi.dto.rental.CreateRequestRentalDto;
 import org.example.carsharingapi.dto.rental.RentalDto;
 import org.example.carsharingapi.dto.rental.UpdateRequestRentalDto;
@@ -52,6 +53,7 @@ public class RentalController {
         return rentalService.getByIdAndUserId(id, user.getId());
     }
 
+    @NotifyOnCreateRental
     @PostMapping()
     public RentalDto addRental(@RequestBody @Valid CreateRequestRentalDto requestRentalDto) {
         User user = UserUtil.getAuthenticatedUser();
@@ -59,7 +61,7 @@ public class RentalController {
     }
 
     @PostMapping("/return/{id}")
-    public RentalDto setActualDate(@PathVariable Long id,
+    public RentalDto returnRental(@PathVariable Long id,
                             @RequestBody @Valid UpdateRequestRentalDto requestRentalDto) {
         User user = UserUtil.getAuthenticatedUser();
         if (user.getRoles().contains(UserRole.MANAGER)) {

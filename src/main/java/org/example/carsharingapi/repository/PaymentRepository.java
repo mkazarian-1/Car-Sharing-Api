@@ -21,4 +21,6 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
 
     @EntityGraph(attributePaths = {"rental","rental.user", "rental.car"})
     Page<Payment> findAll(Pageable pageable);
+
+    boolean existsByRental(Rental rental);
 }

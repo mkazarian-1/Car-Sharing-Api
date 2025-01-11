@@ -1,9 +1,11 @@
 package org.example.carsharingapi.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.carsharingapi.aspects.annotation.NotifyOnCreatePayment;
+import org.example.carsharingapi.aspects.annotation.NotifyOnCreateRental;
+import org.example.carsharingapi.aspects.annotation.NotifyOnSuccessPayment;
 import org.example.carsharingapi.dto.payment.CreatePaymentRequestDto;
 import org.example.carsharingapi.dto.payment.PaymentDto;
-import org.example.carsharingapi.dto.payment.PaymentResponseDto;
 import org.example.carsharingapi.model.User;
 import org.example.carsharingapi.model.enums.UserRole;
 import org.example.carsharingapi.payment.PaymentService;
@@ -22,22 +24,23 @@ public class PaymentController {
 
     @GetMapping()
     public Page<PaymentDto> getPayments(@RequestParam(name = "user_id", required = false,
-            defaultValue = "#{null}") Long userId, Pageable pageable){
+            defaultValue = "#{null}") Long userId, Pageable pageable) {
         User user = UserUtil.getAuthenticatedUser();
-        if(user.getRoles().contains(UserRole.MANAGER)){
+        if (user.getRoles().contains(UserRole.MANAGER)) {
             return paymentService.getAllPaymentsByUser(userId, pageable);
         }
         return paymentService.getAllPaymentsByUser(user.getId(), pageable);
     }
 
+    @NotifyOnCreatePayment
     @PostMapping
-    public PaymentResponseDto createPaymentSession(//TODO - add validation
-                                                   @RequestBody CreatePaymentRequestDto request,
-                                                   UriComponentsBuilder uriBuilder) {
+    public PaymentDto createPaymentSession(@RequestBody CreatePaymentRequestDto request,
+                                           UriComponentsBuilder uriBuilder) {
         User user = UserUtil.getAuthenticatedUser();
         return paymentService.createPaymentSession(request, user.getId(), uriBuilder);
     }
 
+    @NotifyOnSuccessPayment
     @GetMapping("/success")
     public ResponseEntity<String> handleSuccess(@RequestParam String sessionId) {
         boolean success = paymentService.handleSuccess(sessionId);

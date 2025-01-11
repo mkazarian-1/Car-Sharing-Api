@@ -23,7 +23,7 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
 
-    @GetMapping()
+    @GetMapping("/me")
     public UserDto getCurrentUserInfo() {
         User user = UserUtil.getAuthenticatedUser();
         return userMapper.toDto(user);
