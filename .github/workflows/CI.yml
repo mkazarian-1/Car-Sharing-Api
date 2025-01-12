@@ -24,7 +24,7 @@ jobs:
         cache: maven
     - name: Create .env file
       run: |
-          echo -e "${{secrets.BASE_SECRETS}}" > .env
+          echo -e "${{secrets.BASE_SECRET}}" > .env
           
     - name: Build with Maven
       run: mvn -B package --file pom.xml
