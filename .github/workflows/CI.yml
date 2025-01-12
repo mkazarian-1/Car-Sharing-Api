@@ -24,9 +24,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Create .env file
+      - name: Create .env file 
         run: |
-          echo "${{secrets.BASE_SECRET}}" | base64 -d > .env
+          printf "${{secrets.BASE_SECRET}}" > .env
 
       - name: Export .env variables
         run: |
