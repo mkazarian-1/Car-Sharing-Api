@@ -22,8 +22,14 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+
+    - name: Debug environment variables
+      run: |
+        echo "DB_DATASOURCE_URL: $DB_DATASOURCE_URL"
+        echo "DB_DATASOURCE_USERNAME: $DB_DATASOURCE_USERNAME"
+      
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B -e package --file pom.xml
       env:
         DB_DATASOURCE_URL: ${{secrets.DB_DATASOURCE_URL}}
         DB_DATASOURCE_USERNAME: ${{secrets.DB_DATASOURCE_USERNAME}}
