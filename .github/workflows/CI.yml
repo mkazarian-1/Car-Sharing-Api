@@ -15,19 +15,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-    - name: Create .env file
-      run: |
-          echo -e "${{secrets.BASE_SECRET}}" > .env
-          
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-      
-    - name: Cleanup .env file (Remove this step in production)
-      run: rm -f .env
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Create .env file
+        run: |
+          echo "${{secrets.BASE_SECRET}}" | base64 -d > .env
+
+      - name: Export .env variables
+        run: |
+          set -a
+          source .env
+          set +a
+
+      - name: Debug .env file (optional)
+        run: cat .env
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Cleanup .env file (Remove this step in production)
+        run: rm -f .env
