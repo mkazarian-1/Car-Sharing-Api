@@ -15,30 +15,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+      env:
+        DB_DATASOURCE_URL: ${{secrets.DB_DATASOURCE_URL}}
+        DB_DATASOURCE_USERNAME: ${{secrets.DB_DATASOURCE_USERNAME}}
+        DB_DATASOURCE_PASSWORD: ${{secrets.DB_DATASOURCE_PASSWORD}}
+        JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+        JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
+        STRIPE_SECRET_KEY: ${{secrets.STRIPE_SECRET_KEY}}
+        TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
+        TELEGRAM_BOT_NAME: ${{secrets.TELEGRAM_BOT_NAME}}
+        
+      
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Create .env file 
-        run: |
-          printf "${{secrets.BASE_SECRET}}" > .env
-
-      - name: Export .env variables
-        run: |
-          set -a
-          source .env
-          set +a
-
-      - name: Debug .env file (optional)
-        run: cat .env
-
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
-      - name: Cleanup .env file (Remove this step in production)
-        run: rm -f .env
