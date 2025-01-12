@@ -25,7 +25,7 @@ jobs:
 
     - name: Debug environment variables
       run: |
-        echo "DB_DATASOURCE_URL: $DB_DATASOURCE_URL"
+        echo "DB_DATASOURCE_URL: ${{secrets.DB_DATASOURCE_URL}}"
         echo "DB_DATASOURCE_USERNAME: $DB_DATASOURCE_USERNAME"
       
     - name: Build with Maven
