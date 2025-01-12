@@ -56,7 +56,8 @@ public class TelegramController {
         } else if (sessionManager.isSession(chatId)) {
             handleSession(chatId, update);
         } else {
-            sendMessage(SendMessageUtil.createMessage(chatId, "Command not recognized. Use /help to see available commands."));
+            sendMessage(SendMessageUtil.createMessage(chatId,
+                    "Command not recognized. Use /help to see available commands."));
         }
     }
 

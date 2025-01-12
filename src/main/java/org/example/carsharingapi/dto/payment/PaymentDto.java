@@ -1,14 +1,11 @@
 package org.example.carsharingapi.dto.payment;
 
-import jakarta.persistence.*;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.carsharingapi.dto.rental.RentalDto;
-import org.example.carsharingapi.model.Rental;
 import org.example.carsharingapi.model.enums.PaymentStatus;
 import org.example.carsharingapi.model.enums.PaymentType;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter

@@ -1,7 +1,5 @@
 package org.example.carsharingapi.telegram;
 
-
-
 import jakarta.annotation.PostConstruct;
 import org.example.carsharingapi.telegram.controller.TelegramController;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,16 +12,17 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final TelegramController telegramController;
     private final String botName;
 
-    @PostConstruct
-    public void init(){
-        telegramController.initTelegramBot(this);
-    }
-
     public TelegramBot(@Value("${telegram.bot.token}") String botToken,
-                       @Value("${telegram.bot.name}") String botName, TelegramController telegramController) {
+                       @Value("${telegram.bot.name}") String botName,
+                       TelegramController telegramController) {
         super(botToken);
         this.botName = botName;
         this.telegramController = telegramController;
+    }
+
+    @PostConstruct
+    public void init() {
+        telegramController.initTelegramBot(this);
     }
 
     @Override

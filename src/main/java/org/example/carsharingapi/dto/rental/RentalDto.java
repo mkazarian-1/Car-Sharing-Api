@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.carsharingapi.dto.car.CarDto;
-import org.example.carsharingapi.model.Car;
 
 @Getter
 @Setter

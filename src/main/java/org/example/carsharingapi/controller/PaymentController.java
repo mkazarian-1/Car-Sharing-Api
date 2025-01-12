@@ -2,7 +2,6 @@ package org.example.carsharingapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.aspects.annotation.NotifyOnCreatePayment;
-import org.example.carsharingapi.aspects.annotation.NotifyOnCreateRental;
 import org.example.carsharingapi.aspects.annotation.NotifyOnSuccessPayment;
 import org.example.carsharingapi.dto.payment.CreatePaymentRequestDto;
 import org.example.carsharingapi.dto.payment.PaymentDto;
@@ -13,7 +12,12 @@ import org.example.carsharingapi.security.util.UserUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController

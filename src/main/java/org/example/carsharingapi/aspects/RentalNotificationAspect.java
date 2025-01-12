@@ -15,14 +15,15 @@ import org.springframework.stereotype.Component;
 public class RentalNotificationAspect {
     private final NotificationService notificationService;
 
-    @AfterReturning(pointcut = "@annotation(org.example.carsharingapi.aspects.annotation.NotifyOnCreateRental))",
+    @AfterReturning(
+            pointcut = "@annotation"
+                    + "(org.example.carsharingapi.aspects.annotation.NotifyOnCreateRental))",
             returning = "rentalDto")
     public void sendNotificationAfterRental(Object rentalDto) {
         if (rentalDto instanceof RentalDto rental) {
-            String message = String.format("Hi, your rental with id: %d\nhas been processed!",rental.getId());
+            String message = String.format("Hi, your rental with id: %d"
+                    + "\nhas been processed!", rental.getId());
             notificationService.sendNotification(rental.getUserId(), message);
         }
     }
-
-
 }

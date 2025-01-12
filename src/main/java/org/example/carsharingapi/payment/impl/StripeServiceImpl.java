@@ -4,13 +4,10 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import java.math.BigDecimal;
 import org.example.carsharingapi.payment.StripeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class StripeServiceImpl implements StripeService {
@@ -30,7 +27,9 @@ public class StripeServiceImpl implements StripeService {
     }
 
     @Override
-    public Session createStripeSession(BigDecimal amountToPay, String successUrl, String cancelUrl) {
+    public Session createStripeSession(BigDecimal amountToPay,
+                                       String successUrl,
+                                       String cancelUrl) {
         try {
             long amountInCents = amountToPay.multiply(BigDecimal.valueOf(100)).longValueExact();
 
@@ -43,7 +42,8 @@ public class StripeServiceImpl implements StripeService {
                             .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
                                     .setCurrency("usd")
                                     .setUnitAmount(amountInCents)
-                                    .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                    .setProductData(SessionCreateParams
+                                            .LineItem.PriceData.ProductData.builder()
                                             .setName("Rental Payment")
                                             .build())
                                     .build())

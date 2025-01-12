@@ -42,7 +42,7 @@ public class OverdueRentalAnalysisTask {
                 Thread.currentThread().getName());
     }
 
-    private void overdueRentalNotifier(List<Rental> rentals){
+    private void overdueRentalNotifier(List<Rental> rentals) {
         rentals.forEach(rental -> {
             String message = String.format("Hi %s %s, rental with ID %d is overdue.\n"
                             + "Please complete the rental or you will be charged a fine.",

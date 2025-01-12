@@ -1,10 +1,9 @@
 package org.example.carsharingapi.telegram.service.command;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.model.User;
 import org.example.carsharingapi.repository.UserRepository;
-import org.example.carsharingapi.security.util.UserUtil;
-import org.example.carsharingapi.service.UserService;
 import org.example.carsharingapi.telegram.model.TelegramUser;
 import org.example.carsharingapi.telegram.repository.TelegramUserRepository;
 import org.example.carsharingapi.telegram.session.SessionManager;
@@ -12,19 +11,14 @@ import org.example.carsharingapi.telegram.session.UserSession;
 import org.example.carsharingapi.telegram.util.SendMessageUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.List;
-
-
 @Component
 @RequiredArgsConstructor
-public class LoginCommandHandler implements CommandHandler{
+public class LoginCommandHandler implements CommandHandler {
     private final SessionManager sessionManager;
     private final AuthenticationManager authenticationManager;
     private final TelegramUserRepository telegramUserRepository;
@@ -48,7 +42,8 @@ public class LoginCommandHandler implements CommandHandler{
         return switch (userSession.getCurrentStep()) {
             case WAITING_FOR_USERNAME -> handleUsernameInput(chatId, update, userSession);
             case WAITING_FOR_PASSWORD -> handlePasswordInput(chatId, update, userSession);
-            default -> SendMessageUtil.createMessage(chatId, "Unknown session state. Please try again.");
+            default -> SendMessageUtil.createMessage(chatId,
+                    "Unknown session state. Please try again.");
         };
     }
 
@@ -70,10 +65,12 @@ public class LoginCommandHandler implements CommandHandler{
             saveTelegramUser(chatId, userSession.getUsername());
             sessionManager.endSession(chatId);
 
-            return SendMessageUtil.createMessage(chatId, "Authorization was successful.\nNow we can send you notifications.");
+            return SendMessageUtil.createMessage(chatId,
+                    "Authorization was successful.\nNow we can send you notifications.");
         } catch (AuthenticationException e) {
             userSession.setCurrentStep(UserSession.LoginStep.WAITING_FOR_USERNAME);
-            return SendMessageUtil.createMessage(chatId, "The username or password is incorrect. Try again.\n\nEnter your username:");
+            return SendMessageUtil.createMessage(chatId,
+                    "The username or password is incorrect. Try again.\n\nEnter your username:");
         }
     }
 

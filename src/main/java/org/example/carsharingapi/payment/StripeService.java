@@ -1,7 +1,6 @@
 package org.example.carsharingapi.payment;
 
 import com.stripe.model.checkout.Session;
-
 import java.math.BigDecimal;
 
 public interface StripeService {

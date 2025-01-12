@@ -9,7 +9,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public interface PaymentService {
     Page<PaymentDto> getAllPaymentsByUser(Long userId, Pageable pageable);
 
-    PaymentDto createPaymentSession(CreatePaymentRequestDto request, Long userId, UriComponentsBuilder uriBuilder);
+    PaymentDto createPaymentSession(CreatePaymentRequestDto request,
+                                    Long userId,
+                                    UriComponentsBuilder uriBuilder);
 
     boolean handleSuccess(String sessionId);
 }
