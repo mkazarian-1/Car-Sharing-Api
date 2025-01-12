@@ -25,10 +25,9 @@ jobs:
     - name: Create .env file
       run: |
           echo -e "${{secrets.BASE_SECRETS}}" > .env
+          
     - name: Build with Maven
-      env:
-        # Optionally load environment variables for Maven
-        DOTENV_CONFIG_PATH: .env
       run: mvn -B package --file pom.xml
+      
     - name: Cleanup .env file (Remove this step in production)
       run: rm -f .env
