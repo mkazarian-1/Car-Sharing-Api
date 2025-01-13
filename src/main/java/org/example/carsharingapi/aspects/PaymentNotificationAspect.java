@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.example.carsharingapi.dto.payment.PaymentDto;
 import org.example.carsharingapi.model.Payment;
 import org.example.carsharingapi.repository.PaymentRepository;
-import org.example.carsharingapi.service.NotificationService;
+import org.example.carsharingapi.telegram.service.NotificationService;
 import org.springframework.stereotype.Component;
 
 @Aspect

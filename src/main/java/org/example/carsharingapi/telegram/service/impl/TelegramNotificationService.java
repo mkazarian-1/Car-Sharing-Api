@@ -1,12 +1,12 @@
-package org.example.carsharingapi.service.impl;
+package org.example.carsharingapi.telegram.service.impl;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.example.carsharingapi.service.NotificationService;
-import org.example.carsharingapi.telegram.controller.TelegramController;
+import org.example.carsharingapi.telegram.TelegramBot;
 import org.example.carsharingapi.telegram.model.TelegramUser;
 import org.example.carsharingapi.telegram.repository.TelegramUserRepository;
+import org.example.carsharingapi.telegram.service.NotificationService;
 import org.example.carsharingapi.telegram.util.SendMessageUtil;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Log4j2
 public class TelegramNotificationService implements NotificationService {
-    private final TelegramController telegramController;
+    private final TelegramBot telegramBot;
     private final TelegramUserRepository telegramUserRepository;
 
     @Override
@@ -26,7 +26,7 @@ public class TelegramNotificationService implements NotificationService {
         }
         TelegramUser telegramUser = nullableTelegramUser.get();
 
-        telegramController.sendMessage(SendMessageUtil
+        telegramBot.sendMessage(SendMessageUtil
                 .createMessage(telegramUser.getChatId(), message));
     }
 }

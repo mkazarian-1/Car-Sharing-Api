@@ -73,7 +73,8 @@ public class RentalController {
                     Updates a rental's actual return date. Managers can update any rental,
                     while other users can only update their own rentals.""")
     @PostMapping("/return/{id}")
-    public RentalDto returnRental(@PathVariable Long id, @RequestBody @Valid UpdateRequestRentalDto requestRentalDto) {
+    public RentalDto returnRental(@PathVariable Long id,
+                                  @RequestBody @Valid UpdateRequestRentalDto requestRentalDto) {
         User user = UserUtil.getAuthenticatedUser();
         if (user.getRoles().contains(UserRole.MANAGER)) {
             return rentalService.setActualDate(id, requestRentalDto, null);

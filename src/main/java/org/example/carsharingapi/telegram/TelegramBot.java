@@ -1,28 +1,27 @@
 package org.example.carsharingapi.telegram;
 
-import jakarta.annotation.PostConstruct;
-import org.example.carsharingapi.telegram.controller.TelegramController;
+import lombok.extern.log4j.Log4j2;
+import org.example.carsharingapi.telegram.service.UpdateProcessorService;
+import org.example.carsharingapi.telegram.service.impl.UpdateProcessorServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
+@Log4j2
 public class TelegramBot extends TelegramLongPollingBot {
-    private final TelegramController telegramController;
+    private final UpdateProcessorService updateProcessorServiceImpl;
     private final String botName;
 
     public TelegramBot(@Value("${telegram.bot.token}") String botToken,
                        @Value("${telegram.bot.name}") String botName,
-                       TelegramController telegramController) {
+                       UpdateProcessorServiceImpl updateProcessorServiceImpl) {
         super(botToken);
         this.botName = botName;
-        this.telegramController = telegramController;
-    }
-
-    @PostConstruct
-    public void init() {
-        telegramController.initTelegramBot(this);
+        this.updateProcessorServiceImpl = updateProcessorServiceImpl;
     }
 
     @Override
@@ -32,6 +31,19 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        telegramController.processUpdate(update);
+        sendMessage(updateProcessorServiceImpl.processUpdate(update));
+    }
+
+    public void sendMessage(SendMessage message) {
+        try {
+            if (message != null) {
+                this.execute(message);
+                log.info("Message sent to chat ID: {}", message.getChatId());
+            } else {
+                log.info("Message is null");
+            }
+        } catch (TelegramApiException e) {
+            log.error("Failed to send message to chat ID: {}", message.getChatId(), e);
+        }
     }
 }

@@ -36,7 +36,8 @@ public class PaymentController {
                     for any user by specifying the user ID. Otherwise,
                     only the authenticated user's payments are returned.""")
     @GetMapping()
-    public Page<PaymentDto> getPayments(@RequestParam(name = "user_id", required = false, defaultValue = "#{null}") Long userId, Pageable pageable) {
+    public Page<PaymentDto> getPayments(@RequestParam(name = "user_id",
+            required = false, defaultValue = "#{null}") Long userId, Pageable pageable) {
         User user = UserUtil.getAuthenticatedUser();
         if (user.getRoles().contains(UserRole.MANAGER)) {
             return paymentService.getAllPaymentsByUser(userId, pageable);
@@ -48,7 +49,8 @@ public class PaymentController {
             description = "Creates a payment session for the authenticated user.")
     @NotifyOnCreatePayment
     @PostMapping
-    public PaymentDto createPaymentSession(@RequestBody CreatePaymentRequestDto request, UriComponentsBuilder uriBuilder) {
+    public PaymentDto createPaymentSession(@RequestBody CreatePaymentRequestDto request,
+                                           UriComponentsBuilder uriBuilder) {
         User user = UserUtil.getAuthenticatedUser();
         return paymentService.createPaymentSession(request, user.getId(), uriBuilder);
     }

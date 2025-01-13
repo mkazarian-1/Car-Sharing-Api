@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.example.carsharingapi.dto.rental.RentalDto;
-import org.example.carsharingapi.service.NotificationService;
+import org.example.carsharingapi.telegram.service.NotificationService;
 import org.springframework.stereotype.Component;
 
 @Aspect
