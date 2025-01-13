@@ -1,5 +1,7 @@
 package org.example.carsharingapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.aspects.annotation.NotifyOnCreatePayment;
 import org.example.carsharingapi.aspects.annotation.NotifyOnSuccessPayment;
@@ -20,15 +22,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Tag(name = "Payments", description = "Endpoints for managing payments")
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
 
+    @Operation(summary = "Get payments",
+            description = """
+                    Retrieves a paginated list of payments.
+                    If the user is a manager, they can retrieve payments
+                    for any user by specifying the user ID. Otherwise,
+                    only the authenticated user's payments are returned.""")
     @GetMapping()
-    public Page<PaymentDto> getPayments(@RequestParam(name = "user_id", required = false,
-            defaultValue = "#{null}") Long userId, Pageable pageable) {
+    public Page<PaymentDto> getPayments(@RequestParam(name = "user_id", required = false, defaultValue = "#{null}") Long userId, Pageable pageable) {
         User user = UserUtil.getAuthenticatedUser();
         if (user.getRoles().contains(UserRole.MANAGER)) {
             return paymentService.getAllPaymentsByUser(userId, pageable);
@@ -36,14 +44,17 @@ public class PaymentController {
         return paymentService.getAllPaymentsByUser(user.getId(), pageable);
     }
 
+    @Operation(summary = "Create a payment session",
+            description = "Creates a payment session for the authenticated user.")
     @NotifyOnCreatePayment
     @PostMapping
-    public PaymentDto createPaymentSession(@RequestBody CreatePaymentRequestDto request,
-                                           UriComponentsBuilder uriBuilder) {
+    public PaymentDto createPaymentSession(@RequestBody CreatePaymentRequestDto request, UriComponentsBuilder uriBuilder) {
         User user = UserUtil.getAuthenticatedUser();
         return paymentService.createPaymentSession(request, user.getId(), uriBuilder);
     }
 
+    @Operation(summary = "Handle successful payment",
+            description = "Handles a successful payment session identified by its session ID.")
     @NotifyOnSuccessPayment
     @GetMapping("/success")
     public ResponseEntity<String> handleSuccess(@RequestParam String sessionId) {
@@ -51,6 +62,8 @@ public class PaymentController {
         return ResponseEntity.ok(success ? "Payment successful!" : "Payment verification failed.");
     }
 
+    @Operation(summary = "Handle canceled payment",
+            description = "Handles a canceled payment session identified by its session ID.")
     @GetMapping("/cancel")
     public ResponseEntity<String> handleCancel(@RequestParam String sessionId) {
         return ResponseEntity.ok("Payment session canceled. You can retry within 24 hours.");
