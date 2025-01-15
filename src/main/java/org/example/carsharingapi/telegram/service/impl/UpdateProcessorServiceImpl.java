@@ -1,8 +1,8 @@
 package org.example.carsharingapi.telegram.service.impl;
 
 import lombok.extern.log4j.Log4j2;
-import org.example.carsharingapi.telegram.service.CommandDispatcher;
 import org.example.carsharingapi.telegram.service.UpdateProcessorService;
+import org.example.carsharingapi.telegram.service.commands.CommandDispatcher;
 import org.example.carsharingapi.telegram.session.SessionManager;
 import org.example.carsharingapi.telegram.util.SendMessageUtil;
 import org.springframework.stereotype.Service;

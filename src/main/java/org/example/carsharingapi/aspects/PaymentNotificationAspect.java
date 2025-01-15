@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.example.carsharingapi.dto.payment.PaymentDto;
 import org.example.carsharingapi.model.Payment;
 import org.example.carsharingapi.repository.PaymentRepository;
+import org.example.carsharingapi.telegram.service.ManagerNotificationService;
 import org.example.carsharingapi.telegram.service.NotificationService;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PaymentNotificationAspect {
     private final NotificationService notificationService;
+    private final ManagerNotificationService managerNotificationService;
     private final PaymentRepository paymentRepository;
 
     @AfterReturning(
@@ -31,6 +33,7 @@ public class PaymentNotificationAspect {
                     payment.getRental().getId());
 
             notificationService.sendNotification(payment.getRental().getUserId(), message);
+            managerNotificationService.notifyAllManagers(message);
         }
     }
 
@@ -53,6 +56,7 @@ public class PaymentNotificationAspect {
                     payment.getRental().getId());
 
             notificationService.sendNotification(payment.getRental().getUser().getId(), message);
+            managerNotificationService.notifyAllManagers(message);
         }
     }
 }

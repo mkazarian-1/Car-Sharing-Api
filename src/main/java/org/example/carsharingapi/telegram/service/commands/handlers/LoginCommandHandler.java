@@ -1,4 +1,4 @@
-package org.example.carsharingapi.telegram.service.command;
+package org.example.carsharingapi.telegram.service.commands.handlers;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
