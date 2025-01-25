@@ -49,7 +49,7 @@ TELEGRAM_BOT_NAME=your_telegram_bot_name
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/carsharing-api.git
+   git clone https://github.com/mkazarian-1/Car-Sharing-Api.git
    ```
 
 2. Configure environment variables. You can use a `.env` file or set them directly in your environment.
@@ -62,6 +62,11 @@ TELEGRAM_BOT_NAME=your_telegram_bot_name
 5. Run the application:
    ```bash
    java -jar target/Car-Sharing-Api-0.0.1-SNAPSHOT.jar
+   ```
+6. Base admin credentials:
+   ```bash
+   login: admin@gmail.com
+   password: password12345
    ```
 
 ## API Documentation

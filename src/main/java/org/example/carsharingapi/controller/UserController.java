@@ -2,6 +2,7 @@ package org.example.carsharingapi.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.user.UpdateUserInfoDto;
 import org.example.carsharingapi.dto.user.UpdateUserRoleDto;
@@ -39,14 +40,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("/{id}/role")
     public UserDto updateUserRole(@PathVariable Long id,
-                                  @RequestBody UpdateUserRoleDto updateUserRoleDto) {
+                                  @RequestBody @Valid UpdateUserRoleDto updateUserRoleDto) {
         return userService.updateUserRole(id, updateUserRoleDto);
     }
 
     @Operation(summary = "Update current user information",
             description = "Updates the personal information of the currently authenticated user.")
     @PutMapping("/me")
-    public UserDto updateUserInfo(@RequestBody UpdateUserInfoDto updateUserInfoDto) {
+    public UserDto updateUserInfo(@RequestBody @Valid UpdateUserInfoDto updateUserInfoDto) {
         User user = UserUtil.getAuthenticatedUser();
         return userService.updateUserInfo(user, updateUserInfoDto);
     }

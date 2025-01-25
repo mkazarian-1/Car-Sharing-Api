@@ -2,6 +2,7 @@ package org.example.carsharingapi.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.aspects.annotation.NotifyOnCreatePayment;
 import org.example.carsharingapi.aspects.annotation.NotifyOnSuccessPayment;
@@ -13,12 +14,14 @@ import org.example.carsharingapi.payment.PaymentService;
 import org.example.carsharingapi.security.util.UserUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -48,8 +51,9 @@ public class PaymentController {
     @Operation(summary = "Create a payment session",
             description = "Creates a payment session for the authenticated user.")
     @NotifyOnCreatePayment
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public PaymentDto createPaymentSession(@RequestBody CreatePaymentRequestDto request,
+    public PaymentDto createPaymentSession(@RequestBody @Valid CreatePaymentRequestDto request,
                                            UriComponentsBuilder uriBuilder) {
         User user = UserUtil.getAuthenticatedUser();
         return paymentService.createPaymentSession(request, user.getId(), uriBuilder);

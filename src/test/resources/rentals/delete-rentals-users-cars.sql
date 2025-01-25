@@ -1,0 +1,1 @@
+TRUNCATE rentals, cars, users CASCADE;

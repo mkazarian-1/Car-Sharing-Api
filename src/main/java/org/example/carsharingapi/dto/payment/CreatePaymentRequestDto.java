@@ -1,6 +1,5 @@
 package org.example.carsharingapi.dto.payment;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -13,6 +12,6 @@ public class CreatePaymentRequestDto {
     @NotNull
     @Positive
     private Long rentalId;
-    @NotBlank
+    @NotNull
     private PaymentType paymentType;
 }

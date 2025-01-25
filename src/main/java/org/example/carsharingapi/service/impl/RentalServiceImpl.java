@@ -59,11 +59,6 @@ public class RentalServiceImpl implements RentalService {
     @Override
     @Transactional
     public RentalDto addRental(CreateRequestRentalDto requestRentalDto, User user) {
-        Car car = carRepository.findById(requestRentalDto.getCarId())
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                "Can't find car with id: " + requestRentalDto.getCarId()));
-
         if (!requestRentalDto.getRentalDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Rental date can't be in the past.");
         }
@@ -72,6 +67,11 @@ public class RentalServiceImpl implements RentalService {
             throw new IllegalArgumentException(
                     "Return date must be after the rental date.");
         }
+
+        Car car = carRepository.findById(requestRentalDto.getCarId())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Can't find car with id: " + requestRentalDto.getCarId()));
 
         if (car.getInventory() <= 0) {
             throw new IllegalArgumentException(
