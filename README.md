@@ -38,11 +38,22 @@ The application uses the following environment variables. These must be configur
 DB_DATASOURCE_URL=jdbc:postgresql://localhost:5432/CarSharingDB
 DB_DATASOURCE_USERNAME=your_db_username
 DB_DATASOURCE_PASSWORD=your_db_password
+
 JWT_SECRET_KEY=your_jwt_secret
 JWT_EXPIRATION=your_jwt_expiration_time
+
 STRIPE_SECRET_KEY=your_stripe_secret_key
+
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_BOT_NAME=your_telegram_bot_name
+
+DB_DATASOURCE_NAME=CarSharingDB
+DB_DATASOURCE_LOCAL_PORT=5433
+DB_DATASOURCE_DOCKER_PORT=5432
+
+SPRING_LOCAL_PORT=8088
+SPRING_DOCKER_PORT=8080
+DEBUG_PORT=5005
 ```
 
 ## Setup Instructions
