@@ -1,0 +1,1 @@
+TRUNCATE payments, rentals, cars, users CASCADE;
