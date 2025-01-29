@@ -1,7 +1,16 @@
 package org.example.carsharingapi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
+import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.example.carsharingapi.dto.car.CarDto;
 import org.example.carsharingapi.dto.car.CreateRequestCarDto;
@@ -22,13 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CarControllerTest {
@@ -45,7 +47,6 @@ class CarControllerTest {
                 .apply(springSecurity())
                 .build();
     }
-
 
     @Test
     @DisplayName("""
@@ -65,7 +66,8 @@ class CarControllerTest {
         //Then
         CustomPageImpl<CarDto> actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(CustomPageImpl.class, CarDto.class)
+                objectMapper.getTypeFactory()
+                        .constructParametricType(CustomPageImpl.class, CarDto.class)
         );
 
         Assertions.assertEquals(0, actual.getContent().size());
@@ -96,7 +98,8 @@ class CarControllerTest {
         //Then
         CustomPageImpl<CarDto> actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(CustomPageImpl.class, CarDto.class)
+                objectMapper.getTypeFactory()
+                        .constructParametricType(CustomPageImpl.class, CarDto.class)
         );
 
         Assertions.assertEquals(expected.size(), actual.getContent().size());

@@ -1,5 +1,7 @@
 package org.example.carsharingapi.repository;
 
+import java.time.LocalDate;
+import java.util.List;
 import org.example.carsharingapi.model.Rental;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -11,15 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class RentalRepositoryTest {
     @Autowired
     private RentalRepository rentalRepository;
-
 
     @Test
     @DisplayName("""
@@ -27,7 +25,8 @@ class RentalRepositoryTest {
             """)
     void findRentalsByUserIdAndActivity_EmptyDb_Successful() {
         Page<Rental> actual = rentalRepository
-                .findRentalsByUserIdAndActivity(1L, true, PageRequest.of(0, 10));
+                .findRentalsByUserIdAndActivity(
+                        1L, true, PageRequest.of(0, 10));
         Assertions.assertEquals(0, actual.getTotalElements());
     }
 
@@ -41,19 +40,23 @@ class RentalRepositoryTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findRentalsByUserIdAndActivity_Successful() {
         Page<Rental> actual1 = rentalRepository
-                .findRentalsByUserIdAndActivity(3L, true, PageRequest.of(0, 10));
+                .findRentalsByUserIdAndActivity(
+                        3L, true, PageRequest.of(0, 10));
         Assertions.assertEquals(2, actual1.getTotalElements());
 
         Page<Rental> actual2 = rentalRepository
-                .findRentalsByUserIdAndActivity(2L, true, PageRequest.of(0, 10));
+                .findRentalsByUserIdAndActivity(
+                        2L, true, PageRequest.of(0, 10));
         Assertions.assertEquals(1, actual2.getTotalElements());
 
         Page<Rental> actual3 = rentalRepository
-                .findRentalsByUserIdAndActivity(3L, false, PageRequest.of(0, 10));
+                .findRentalsByUserIdAndActivity(
+                        3L, false, PageRequest.of(0, 10));
         Assertions.assertEquals(1, actual3.getTotalElements());
 
         Page<Rental> actual4 = rentalRepository
-                .findRentalsByUserIdAndActivity(2L, false, PageRequest.of(0, 10));
+                .findRentalsByUserIdAndActivity(
+                        2L, false, PageRequest.of(0, 10));
         Assertions.assertEquals(2, actual4.getTotalElements());
     }
 

@@ -1,9 +1,25 @@
 package org.example.carsharingapi.payment;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.stripe.model.checkout.Session;
-import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import org.example.carsharingapi.dto.payment.CreatePaymentRequestDto;
 import org.example.carsharingapi.dto.payment.PaymentDto;
+import org.example.carsharingapi.exeption.ElementNotFoundException;
 import org.example.carsharingapi.mapper.PaymentMapper;
 import org.example.carsharingapi.mapper.impl.CarMapperImpl;
 import org.example.carsharingapi.mapper.impl.PaymentMapperImpl;
@@ -29,22 +45,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.util.UriComponentsBuilder;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceImplTest {
@@ -62,7 +62,8 @@ class PaymentServiceImplTest {
     private PaymentServiceImpl paymentService;
 
     @Spy
-    private PaymentMapper paymentMapper = new PaymentMapperImpl(new RentalMapperImpl(new CarMapperImpl()));
+    private PaymentMapper paymentMapper =
+            new PaymentMapperImpl(new RentalMapperImpl(new CarMapperImpl()));
 
     @Test
     @DisplayName("Get all payments by user - success")
@@ -71,14 +72,16 @@ class PaymentServiceImplTest {
         Long userId = 1L;
         Pageable pageable = PageRequest.of(0, 10);
         Page<Payment> paymentPage = new PageImpl<>(List.of(createPayment()));
-        when(paymentRepository.findAllByRentalUserId(userId, pageable)).thenReturn(paymentPage);
+        when(paymentRepository
+                .findAllByRentalUserId(userId, pageable)).thenReturn(paymentPage);
 
         // when
         Page<PaymentDto> result = paymentService.getAllPaymentsByUser(userId, pageable);
 
         // then
         assertEquals(1, result.getContent().size());
-        assertEquals("PENDING", result.getContent().get(0).getStatus().name());
+        assertEquals("PENDING",
+                result.getContent().get(0).getStatus().name());
         verify(paymentRepository).findAllByRentalUserId(userId, pageable);
     }
 
@@ -92,18 +95,21 @@ class PaymentServiceImplTest {
         request.setPaymentType(PaymentType.PAYMENT);
 
         Rental rental = createRental();
-        when(rentalRepository.findByIdAndUserId(1L, userId)).thenReturn(Optional.of(rental));
+        when(rentalRepository
+                .findByIdAndUserId(1L, userId)).thenReturn(Optional.of(rental));
         when(paymentRepository.existsByRental(rental)).thenReturn(false);
         when(paymentRepository.save(any())).thenReturn(createPayment());
 
         Session sessionMock = createSessionMock();
-        when(stripeService.createStripeSession(any(BigDecimal.class), anyString(), anyString()))
+        when(stripeService
+                .createStripeSession(any(BigDecimal.class), anyString(), anyString()))
                 .thenReturn(sessionMock);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
 
         // when
-        PaymentDto result = paymentService.createPaymentSession(request, userId, uriBuilder);
+        PaymentDto result = paymentService
+                .createPaymentSession(request, userId, uriBuilder);
 
         // then
         assertNotNull(result);
@@ -121,11 +127,14 @@ class PaymentServiceImplTest {
         request.setRentalId(1L);
         request.setPaymentType(PaymentType.PAYMENT);
 
-        when(rentalRepository.findByIdAndUserId(1L, userId)).thenReturn(Optional.empty());
+        when(rentalRepository
+                .findByIdAndUserId(1L, userId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () ->
-                paymentService.createPaymentSession(request, userId, UriComponentsBuilder.newInstance()));
+        assertThrows(ElementNotFoundException.class, () ->
+                paymentService
+                        .createPaymentSession(
+                                request, userId, UriComponentsBuilder.newInstance()));
     }
 
     @Test
@@ -172,7 +181,8 @@ class PaymentServiceImplTest {
         when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> paymentService.handleSuccess(sessionId));
+        assertThrows(ElementNotFoundException.class,
+                () -> paymentService.handleSuccess(sessionId));
     }
 
     private Rental createRental() {

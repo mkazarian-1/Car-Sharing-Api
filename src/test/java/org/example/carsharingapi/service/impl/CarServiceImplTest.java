@@ -1,15 +1,26 @@
 package org.example.carsharingapi.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 import org.example.carsharingapi.dto.car.CarDto;
 import org.example.carsharingapi.dto.car.CreateRequestCarDto;
 import org.example.carsharingapi.dto.car.UpdateRequestCarDto;
+import org.example.carsharingapi.exeption.ElementNotFoundException;
 import org.example.carsharingapi.mapper.CarMapper;
 import org.example.carsharingapi.mapper.impl.CarMapperImpl;
 import org.example.carsharingapi.model.Car;
 import org.example.carsharingapi.model.enums.CarType;
 import org.example.carsharingapi.repository.CarRepository;
+import org.example.carsharingapi.util.CarTestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,18 +32,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CarServiceImplTest {
-
     @Mock
     private CarRepository carRepository;
 
@@ -53,95 +55,57 @@ class CarServiceImplTest {
         createRequestCarDto.setInventory(10);
         createRequestCarDto.setDailyFee(BigDecimal.valueOf(100));
 
-        Car savedCar = new Car();
-        savedCar.setId(1L);
-        savedCar.setBrand("Tesla");
-        savedCar.setModel("Model S");
-        savedCar.setType(CarType.HATCHBACK);
-        savedCar.setInventory(10);
-        savedCar.setDailyFee(BigDecimal.valueOf(100));
-
-        CarDto expected = new CarDto();
-        expected.setId(1L);
-        expected.setBrand("Tesla");
-        expected.setModel("Model S");
-        expected.setType(CarType.HATCHBACK);
-        expected.setInventory(10);
-        expected.setDailyFee(BigDecimal.valueOf(100));
-
-        when(carRepository.save(any(Car.class))).thenReturn(savedCar);
+        when(carRepository.save(any(Car.class))).thenReturn(CarTestUtil.getCar());
 
         // when
         CarDto actual = carService.save(createRequestCarDto);
 
         // then
-        assertTrue(EqualsBuilder.reflectionEquals(expected, actual));
+        assertThat(actual).usingRecursiveComparison().isEqualTo(CarTestUtil.getCarDto());
+        verify(carRepository).save(any(Car.class));
+        verifyNoMoreInteractions(carRepository);
     }
 
     @Test
     @DisplayName("Should retrieve a car by ID and return the corresponding DTO")
     void testGetById_Found() {
         // given
-        Car car = new Car();
-        car.setId(1L);
-        car.setBrand("Tesla");
-        car.setModel("Model S");
-        car.setType(CarType.HATCHBACK);
-        car.setInventory(10);
-        car.setDailyFee(BigDecimal.valueOf(100));
-
-        CarDto expected = new CarDto();
-        expected.setId(1L);
-        expected.setBrand("Tesla");
-        expected.setModel("Model S");
-        expected.setType(CarType.HATCHBACK);
-        expected.setInventory(10);
-        expected.setDailyFee(BigDecimal.valueOf(100));
-
-        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(carRepository.findById(1L)).thenReturn(Optional.of(CarTestUtil.getCar()));
 
         // when
         CarDto actual = carService.getById(1L);
 
         // then
-        assertTrue(EqualsBuilder.reflectionEquals(expected, actual));
+        assertThat(actual).usingRecursiveComparison().isEqualTo(CarTestUtil.getCarDto());
         verify(carRepository).findById(1L);
+        verifyNoMoreInteractions(carRepository);
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when car ID is not found")
+    @DisplayName("Should throw ElementNotFoundException when car ID is not found")
     void testGetById_NotFound() {
         // given
         when(carRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+        ElementNotFoundException exception = assertThrows(ElementNotFoundException.class,
                 () -> carService.getById(1L));
 
         // then
         assertEquals("Can't find car with current id: 1", exception.getMessage());
         verify(carRepository).findById(1L);
+        verifyNoMoreInteractions(carRepository);
     }
 
     @Test
     @DisplayName("Should retrieve all cars and return a paginated list of DTOs")
     void testGetAll() {
         // given
-        Car car1 = new Car();
-        car1.setId(1L);
+        Car car1 = CarTestUtil.getCar();
         car1.setBrand("Tesla");
-        car1.setModel("Model S");
-        car1.setType(CarType.HATCHBACK);
-        car1.setInventory(10);
-        car1.setDailyFee(BigDecimal.valueOf(100));
 
-        Car car2 = new Car();
-        car2.setId(2L);
+        Car car2 = CarTestUtil.getCar();
         car2.setBrand("Ford");
-        car2.setModel("Mustang");
-        car1.setType(CarType.SEDAN);
-        car1.setInventory(3);
-        car1.setDailyFee(BigDecimal.valueOf(100));
 
         Page<Car> carPage = new PageImpl<>(List.of(car1, car2));
         when(carRepository.findAll(any(Pageable.class))).thenReturn(carPage);
@@ -150,10 +114,11 @@ class CarServiceImplTest {
         Page<CarDto> result = carService.getAll(PageRequest.of(0, 10));
 
         // then
-        assertEquals(2, result.getTotalElements());
-        assertEquals("Tesla", result.getContent().get(0).getBrand());
-        assertEquals("Ford", result.getContent().get(1).getBrand());
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getContent().get(0).getBrand()).isEqualTo(car1.getBrand());
+        assertThat(result.getContent().get(1).getBrand()).isEqualTo(car2.getBrand());
         verify(carRepository).findAll(any(Pageable.class));
+        verifyNoMoreInteractions(carRepository);
     }
 
     @Test
@@ -167,6 +132,7 @@ class CarServiceImplTest {
 
         // then
         verify(carRepository).deleteById(carId);
+        verifyNoMoreInteractions(carRepository);
     }
 
     @Test
@@ -177,42 +143,36 @@ class CarServiceImplTest {
         updateRequestCarDto.setInventory(10);
         updateRequestCarDto.setDailyFee(BigDecimal.valueOf(100));
 
-        Car existingCar = new Car();
+        Car existingCar = CarTestUtil.getCar();
         existingCar.setId(1L);
-        existingCar.setBrand("BMW");
-        existingCar.setModel("X5");
-        existingCar.setType(CarType.SEDAN);
-        existingCar.setInventory(4);
+        existingCar.setInventory(100);
         existingCar.setDailyFee(BigDecimal.valueOf(10));
 
-        Car updateCar = new Car();
-        updateCar.setId(1L);
-        updateCar.setBrand("BMW");
-        updateCar.setModel("X5");
-        updateCar.setInventory(10);
-        updateCar.setDailyFee(BigDecimal.valueOf(100));
+        Car updatedCar = CarTestUtil.getCar();
+        updatedCar.setId(1L);
+        updatedCar.setInventory(10);
+        updatedCar.setDailyFee(BigDecimal.valueOf(100));
 
-        CarDto expected = new CarDto();
+        CarDto expected = CarTestUtil.getCarDto();
         expected.setId(1L);
-        expected.setBrand("BMW");
-        expected.setModel("X5");
         expected.setInventory(10);
         expected.setDailyFee(BigDecimal.valueOf(100));
 
         when(carRepository.findById(1L)).thenReturn(Optional.of(existingCar));
-        when(carRepository.save(any(Car.class))).thenReturn(updateCar);
+        when(carRepository.save(any(Car.class))).thenReturn(updatedCar);
 
         // when
         CarDto actual = carService.update(1L, updateRequestCarDto);
 
         // then
-        assertTrue(EqualsBuilder.reflectionEquals(expected, actual));
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         verify(carRepository).findById(1L);
         verify(carRepository).save(existingCar);
+        verifyNoMoreInteractions(carRepository);
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when updating a non-existent car")
+    @DisplayName("Should throw ElementNotFoundException when updating a non-existent car")
     void testUpdate_NotFound() {
         // given
         UpdateRequestCarDto updateRequestCarDto = new UpdateRequestCarDto();
@@ -222,11 +182,12 @@ class CarServiceImplTest {
         when(carRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+        ElementNotFoundException exception = assertThrows(ElementNotFoundException.class,
                 () -> carService.update(1L, updateRequestCarDto));
 
         // then
         assertEquals("Can't find car with current id: 1", exception.getMessage());
         verify(carRepository).findById(1L);
+        verifyNoMoreInteractions(carRepository);
     }
 }

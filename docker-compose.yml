@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     restart: on-failure
-    image: car-sharing-app:0.0.1
+    image: car-sharing-app:latest
     build: .
     env_file: ./.env
     ports:

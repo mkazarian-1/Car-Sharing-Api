@@ -2,10 +2,11 @@ package org.example.carsharingapi.telegram.service.commands.handlers;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.carsharingapi.exeption.IncorrectArgumentException;
+import org.example.carsharingapi.model.TelegramUser;
 import org.example.carsharingapi.model.User;
+import org.example.carsharingapi.repository.TelegramUserRepository;
 import org.example.carsharingapi.repository.UserRepository;
-import org.example.carsharingapi.telegram.model.TelegramUser;
-import org.example.carsharingapi.telegram.repository.TelegramUserRepository;
 import org.example.carsharingapi.telegram.session.SessionManager;
 import org.example.carsharingapi.telegram.session.UserSession;
 import org.example.carsharingapi.telegram.util.SendMessageUtil;
@@ -84,7 +85,7 @@ public class LoginCommandHandler implements CommandHandler {
 
     private void saveTelegramUser(long chatId, String username) {
         User user = userRepository.findUserByEmail(username).orElseThrow(() ->
-                new IllegalArgumentException("User not found for username: " + username)
+                new IncorrectArgumentException("User not found for username: " + username)
         );
 
         TelegramUser telegramUser = telegramUserRepository.findByUser(user)

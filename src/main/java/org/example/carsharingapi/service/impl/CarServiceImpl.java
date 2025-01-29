@@ -1,10 +1,10 @@
 package org.example.carsharingapi.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.car.CarDto;
 import org.example.carsharingapi.dto.car.CreateRequestCarDto;
 import org.example.carsharingapi.dto.car.UpdateRequestCarDto;
+import org.example.carsharingapi.exeption.ElementNotFoundException;
 import org.example.carsharingapi.mapper.CarMapper;
 import org.example.carsharingapi.model.Car;
 import org.example.carsharingapi.repository.CarRepository;
@@ -30,7 +30,7 @@ public class CarServiceImpl implements CarService {
     public CarDto getById(Long id) {
         return carMapper.toDto(
                 carRepository.findById(id).orElseThrow(
-                        () -> new EntityNotFoundException(
+                        () -> new ElementNotFoundException(
                                 "Can't find car with current id: " + id)));
     }
 
@@ -47,7 +47,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarDto update(Long id, UpdateRequestCarDto updateRequestCarDto) {
         Car car = carRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find car with current id: " + id));
+                () -> new ElementNotFoundException("Can't find car with current id: " + id));
         carMapper.updateCar(updateRequestCarDto, car);
         return carMapper.toDto(carRepository.save(car));
     }

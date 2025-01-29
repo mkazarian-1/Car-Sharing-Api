@@ -1,17 +1,17 @@
 package org.example.carsharingapi.payment.impl;
 
 import com.stripe.model.checkout.Session;
-import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.payment.CreatePaymentRequestDto;
 import org.example.carsharingapi.dto.payment.PaymentDto;
+import org.example.carsharingapi.exeption.ElementNotFoundException;
+import org.example.carsharingapi.exeption.IncorrectArgumentException;
 import org.example.carsharingapi.mapper.PaymentMapper;
 import org.example.carsharingapi.model.Payment;
 import org.example.carsharingapi.model.Rental;
-import org.example.carsharingapi.model.constants.PaymentConstants;
 import org.example.carsharingapi.model.enums.PaymentStatus;
 import org.example.carsharingapi.model.enums.PaymentType;
 import org.example.carsharingapi.payment.PaymentService;
@@ -27,6 +27,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
+    public static final BigDecimal FINE_MULTIPLIER = BigDecimal.valueOf(1.5);
+
     @Value("${app.payment.success-url}")
     private String successUrl;
 
@@ -51,11 +53,12 @@ public class PaymentServiceImpl implements PaymentService {
                                            Long userId,
                                            UriComponentsBuilder uriBuilder) {
         Rental rental = rentalRepository.findByIdAndUserId(request.getRentalId(), userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Rental not found for the given ID and user"));
+                .orElseThrow(() -> new ElementNotFoundException(
+                        "Rental not found for the given ID: "
+                                + request.getRentalId() + " for user: " + userId));
 
         if (paymentRepository.existsByRental(rental)) {
-            throw new IllegalArgumentException("Payment session for this rental already exist");
+            throw new IncorrectArgumentException("Payment session for this rental already exist");
         }
 
         BigDecimal amountToPay = calculateAmountToPay(rental, request.getPaymentType());
@@ -76,8 +79,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public boolean handleSuccess(String sessionId) {
         Payment payment = paymentRepository.findBySessionId(sessionId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Payment not found fot the given session ID"));
+                .orElseThrow(() -> new ElementNotFoundException(
+                        "Payment not found fot the given session ID:" + sessionId));
 
         if (stripeService.isPaymentSuccessful(sessionId)) {
             payment.setStatus(PaymentStatus.PAID);
@@ -129,7 +132,7 @@ public class PaymentServiceImpl implements PaymentService {
         long overdueDays = Math.max(0, daysBetween(rental.getReturnDate(),
                 rental.getActualReturnDate()));
         BigDecimal fine = dailyFee.multiply(BigDecimal.valueOf(overdueDays))
-                .multiply(PaymentConstants.FINE_MULTIPLIER);
+                .multiply(FINE_MULTIPLIER);
 
         return rentCost.add(fine);
     }

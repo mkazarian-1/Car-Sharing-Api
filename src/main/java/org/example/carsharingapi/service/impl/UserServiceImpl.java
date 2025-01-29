@@ -1,10 +1,10 @@
 package org.example.carsharingapi.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.user.UpdateUserInfoDto;
 import org.example.carsharingapi.dto.user.UpdateUserRoleDto;
 import org.example.carsharingapi.dto.user.UserDto;
+import org.example.carsharingapi.exeption.ElementNotFoundException;
 import org.example.carsharingapi.mapper.UserMapper;
 import org.example.carsharingapi.model.User;
 import org.example.carsharingapi.repository.UserRepository;
@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUserRole(Long id, UpdateUserRoleDto updateUserRoleDto) {
         User user = userRepository.findUserById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find user by id: " + id));
+                () -> new ElementNotFoundException("Can't find user by id: " + id));
         userMapper.updateRole(user, updateUserRoleDto);
         return userMapper.toDto(userRepository.save(user));
     }

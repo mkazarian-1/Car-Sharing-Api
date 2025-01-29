@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1735908195008-3
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_rentals
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rental_date
+                  type: DATE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: return_date
+                  type: DATE
+              - column:
+                  name: actual_return_date
+                  type: DATE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: car_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+            tableName: rentals
+  - changeSet:
+      id: 1735908195008-9
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: car_id
+            baseTableName: rentals
+            constraintName: FK_RENTALS_ON_CAR
+            referencedColumnNames: id
+            referencedTableName: cars
+  - changeSet:
+      id: 1735908195008-10
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: rentals
+            constraintName: FK_RENTALS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users

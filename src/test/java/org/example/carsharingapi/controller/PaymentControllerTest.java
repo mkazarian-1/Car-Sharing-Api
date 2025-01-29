@@ -1,13 +1,23 @@
 package org.example.carsharingapi.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.checkout.Session;
+import java.math.BigDecimal;
 import org.example.carsharingapi.dto.payment.CreatePaymentRequestDto;
 import org.example.carsharingapi.dto.payment.PaymentDto;
 import org.example.carsharingapi.model.enums.PaymentType;
 import org.example.carsharingapi.payment.StripeService;
 import org.example.carsharingapi.util.CustomPageImpl;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,13 +33,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import java.math.BigDecimal;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
@@ -46,7 +49,8 @@ class PaymentControllerTest {
             mockSession.setId("mock-session-id");
             mockSession.setUrl("https://mock-session-url.com");
 
-            Mockito.when(stripeService.createStripeSession(any(), any(), any())).thenReturn(mockSession);
+            Mockito.when(stripeService.createStripeSession(any(),
+                    any(), any())).thenReturn(mockSession);
             return stripeService;
         }
     }
@@ -85,7 +89,8 @@ class PaymentControllerTest {
         // Then
         CustomPageImpl<PaymentDto> actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(CustomPageImpl.class, PaymentDto.class)
+                objectMapper.getTypeFactory()
+                        .constructParametricType(CustomPageImpl.class, PaymentDto.class)
         );
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(1, actual.getContent().size());
@@ -109,7 +114,8 @@ class PaymentControllerTest {
         // Then
         CustomPageImpl<PaymentDto> actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(CustomPageImpl.class, PaymentDto.class)
+                objectMapper.getTypeFactory()
+                        .constructParametricType(CustomPageImpl.class, PaymentDto.class)
         );
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(1, actual.getContent().size());
@@ -141,7 +147,9 @@ class PaymentControllerTest {
                 .andReturn();
 
         // Then
-        PaymentDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), PaymentDto.class);
+        PaymentDto actual = objectMapper
+                .readValue(mvcResult
+                        .getResponse().getContentAsString(), PaymentDto.class);
         Assertions.assertNotNull(actual);
         Assertions.assertNotNull(actual.getId());
         Assertions.assertNotNull(actual.getSessionUrl());

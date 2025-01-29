@@ -1,10 +1,10 @@
 package org.example.carsharingapi.util;
 
-import org.example.carsharingapi.dto.car.CarDto;
-import org.example.carsharingapi.model.enums.CarType;
-
 import java.math.BigDecimal;
 import java.util.List;
+import org.example.carsharingapi.dto.car.CarDto;
+import org.example.carsharingapi.model.Car;
+import org.example.carsharingapi.model.enums.CarType;
 
 public class CarTestUtil {
     public static List<CarDto> getCarDtoList() {
@@ -33,5 +33,29 @@ public class CarTestUtil {
         carDto3.setDailyFee(BigDecimal.valueOf(30));
 
         return List.of(carDto1, carDto2, carDto3);
+    }
+
+    public static Car getCar() {
+        Car car = new Car();
+        car.setId(1L);
+        car.setBrand("Tesla");
+        car.setModel("Model S");
+        car.setType(CarType.HATCHBACK);
+        car.setInventory(10);
+        car.setDailyFee(BigDecimal.valueOf(100));
+
+        return car;
+    }
+
+    public static CarDto getCarDto() {
+        CarDto carDto = new CarDto();
+        carDto.setId(1L);
+        carDto.setBrand("Tesla");
+        carDto.setModel("Model S");
+        carDto.setType(CarType.HATCHBACK);
+        carDto.setInventory(10);
+        carDto.setDailyFee(BigDecimal.valueOf(100));
+
+        return carDto;
     }
 }

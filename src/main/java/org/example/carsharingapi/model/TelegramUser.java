@@ -1,4 +1,4 @@
-package org.example.carsharingapi.telegram.model;
+package org.example.carsharingapi.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +11,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.carsharingapi.model.User;
 
 @Entity
 @Getter

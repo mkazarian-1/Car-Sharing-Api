@@ -1,17 +1,24 @@
 package org.example.carsharingapi.controller;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import org.example.carsharingapi.dto.rental.CreateRequestRentalDto;
 import org.example.carsharingapi.dto.rental.RentalDto;
 import org.example.carsharingapi.dto.rental.UpdateRequestRentalDto;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.carsharingapi.util.CustomPageImpl;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,16 +26,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import java.time.LocalDate;
-
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
 class RentalControllerTest {
-
     private static MockMvc mockMvc;
 
     @Autowired
@@ -65,7 +66,8 @@ class RentalControllerTest {
         // Then
         CustomPageImpl<RentalDto> actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(CustomPageImpl.class, RentalDto.class)
+                objectMapper.getTypeFactory()
+                        .constructParametricType(CustomPageImpl.class, RentalDto.class)
         );
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.getContent().size());
@@ -89,7 +91,8 @@ class RentalControllerTest {
         // Then
         CustomPageImpl<RentalDto> actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(CustomPageImpl.class, RentalDto.class)
+                objectMapper.getTypeFactory()
+                        .constructParametricType(CustomPageImpl.class, RentalDto.class)
         );
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(1, actual.getContent().size());

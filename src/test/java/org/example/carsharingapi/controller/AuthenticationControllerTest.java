@@ -1,5 +1,9 @@
 package org.example.carsharingapi.controller;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.carsharingapi.dto.user.UserLoginRequestDto;
 import org.example.carsharingapi.dto.user.UserLoginResponseDto;
@@ -17,9 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthenticationControllerTest {
@@ -39,7 +40,8 @@ class AuthenticationControllerTest {
 
     @Test
     @DisplayName("Should register a new user successfully")
-    @Sql(scripts = "classpath:users/delete-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "classpath:users/delete-users.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void registerUser_CorrectData_Success() throws Exception {
         // Given
         UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto();
@@ -72,8 +74,10 @@ class AuthenticationControllerTest {
 
     @Test
     @DisplayName("Should fail registration with duplicate email")
-    @Sql(scripts = "classpath:users/add-user-without-id.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:users/delete-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "classpath:users/add-user-without-id.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:users/delete-users.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void registerUser_DuplicateEmail_Failure() throws Exception {
         // Given
         UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto();
@@ -95,8 +99,10 @@ class AuthenticationControllerTest {
 
     @Test
     @DisplayName("Should login successfully and return JWT token")
-    @Sql(scripts = "classpath:users/add-user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:users/delete-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "classpath:users/add-user.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:users/delete-users.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void login_CorrectCredentials_Success() throws Exception {
         // Given
         UserLoginRequestDto loginRequestDto = new UserLoginRequestDto();
@@ -125,8 +131,10 @@ class AuthenticationControllerTest {
 
     @Test
     @DisplayName("Should fail login with incorrect credentials")
-    @Sql(scripts = "classpath:users/add-user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:users/delete-users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "classpath:users/add-user.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:users/delete-users.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void login_IncorrectCredentials_Failure() throws Exception {
         // Given
         UserLoginRequestDto loginRequestDto = new UserLoginRequestDto();

@@ -1,19 +1,5 @@
 package org.example.carsharingapi.payment;
 
-import com.stripe.exception.ApiException;
-import com.stripe.exception.StripeException;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionCreateParams;
-import org.example.carsharingapi.payment.impl.StripeServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
-import java.math.BigDecimal;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,6 +10,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.stripe.exception.ApiException;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
+import java.math.BigDecimal;
+import org.example.carsharingapi.payment.impl.StripeServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class StripeServiceImplTest {
@@ -76,7 +76,10 @@ class StripeServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when StripeException occurs in isPaymentSuccessful")
+    @DisplayName("""
+            Should throw RuntimeException
+            when StripeException occurs in isPaymentSuccessful
+            """)
     void testIsPaymentSuccessful_ApiException() throws StripeException {
         // given
         String sessionId = "test_session_id";
@@ -108,7 +111,8 @@ class StripeServiceImplTest {
             when(Session.create(any(SessionCreateParams.class))).thenReturn(sessionMock);
 
             // when
-            Session result = stripeService.createStripeSession(amountToPay, successUrl, cancelUrl);
+            Session result = stripeService
+                    .createStripeSession(amountToPay, successUrl, cancelUrl);
 
             // then
             assertNotNull(result);
@@ -116,7 +120,10 @@ class StripeServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when StripeException occurs in createStripeSession")
+    @DisplayName("""
+            Should throw RuntimeException
+            when StripeException occurs in createStripeSession
+            """)
     void testCreateStripeSession_StripeException() throws StripeException {
         // given
         BigDecimal amountToPay = BigDecimal.valueOf(100.00);

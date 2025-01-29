@@ -1,11 +1,11 @@
 package org.example.carsharingapi.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.example.carsharingapi.dto.rental.CreateRequestRentalDto;
 import org.example.carsharingapi.dto.rental.RentalDto;
 import org.example.carsharingapi.dto.rental.UpdateRequestRentalDto;
+import org.example.carsharingapi.exeption.ElementNotFoundException;
+import org.example.carsharingapi.exeption.IncorrectArgumentException;
 import org.example.carsharingapi.mapper.RentalMapper;
 import org.example.carsharingapi.model.Car;
 import org.example.carsharingapi.model.Rental;
@@ -43,7 +43,7 @@ public class RentalServiceImpl implements RentalService {
         return rentalMapper.toDto(
                 rentalRepository.findById(id)
                         .orElseThrow(
-                                () -> new EntityNotFoundException(
+                                () -> new ElementNotFoundException(
                                         "Can't find rental with id: " + id)));
     }
 
@@ -52,29 +52,25 @@ public class RentalServiceImpl implements RentalService {
         return rentalMapper.toDto(rentalRepository
                 .findByIdAndUserId(id, userId)
                 .orElseThrow(
-                        () -> new EntityNotFoundException(
+                        () -> new ElementNotFoundException(
                                 "Can't find rental with id: " + id + " and User id " + userId)));
     }
 
     @Override
     @Transactional
     public RentalDto addRental(CreateRequestRentalDto requestRentalDto, User user) {
-        if (!requestRentalDto.getRentalDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Rental date can't be in the past.");
-        }
-
         if (!requestRentalDto.getReturnDate().isAfter(requestRentalDto.getRentalDate())) {
-            throw new IllegalArgumentException(
+            throw new IncorrectArgumentException(
                     "Return date must be after the rental date.");
         }
 
         Car car = carRepository.findById(requestRentalDto.getCarId())
                 .orElseThrow(
-                        () -> new EntityNotFoundException(
+                        () -> new ElementNotFoundException(
                                 "Can't find car with id: " + requestRentalDto.getCarId()));
 
         if (car.getInventory() <= 0) {
-            throw new IllegalArgumentException(
+            throw new IncorrectArgumentException(
                     "Car is not available for rental. Inventory is empty.");
         }
 
@@ -93,26 +89,26 @@ public class RentalServiceImpl implements RentalService {
         if (userId == null) {
             rental = rentalRepository.findById(id)
                     .orElseThrow(
-                            () -> new EntityNotFoundException("Can't find user with id: " + id));
+                            () -> new ElementNotFoundException("Can't find user with id: " + id));
         } else {
             rental = rentalRepository.findByIdAndUserId(id, userId)
                     .orElseThrow(
-                            () -> new EntityNotFoundException(
+                            () -> new ElementNotFoundException(
                                     "Can't find rental with id: " + id + " and User id " + userId));
         }
 
         if (rental.getActualReturnDate() != null) {
-            throw new IllegalArgumentException(
+            throw new IncorrectArgumentException(
                     "Rental with id: " + id + " has already been returned");
         }
 
         if (!requestRentalDto.getActualReturnDate().isAfter(rental.getRentalDate())) {
-            throw new IllegalArgumentException(
+            throw new IncorrectArgumentException(
                     "Actual return date must be after the rental date.");
         }
 
         Car car = carRepository.findById(rental.getCar().getId())
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new ElementNotFoundException(
                         "Can't find car with id: " + rental.getCar().getId()));
         car.setInventory(car.getInventory() + 1);
 

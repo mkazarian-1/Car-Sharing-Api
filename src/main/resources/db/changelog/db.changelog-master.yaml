@@ -1,6 +1,12 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changes/init-changelog.yaml
+      file: db/changelog/changes/changelog-cars.yaml
+  - include:
+      file: db/changelog/changes/changelog-users.yaml
+  - include:
+      file: db/changelog/changes/changelog-rentals.yaml
+  - include:
+      file: db/changelog/changes/changelog-payments.yaml
   - include:
       file: db/changelog/changes/manager-insert-changelog.yaml
   - include:

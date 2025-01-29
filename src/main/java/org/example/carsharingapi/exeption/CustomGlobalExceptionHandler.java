@@ -1,7 +1,6 @@
 package org.example.carsharingapi.exeption;
 
 import io.swagger.v3.oas.annotations.Hidden;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -62,9 +61,9 @@ public class CustomGlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleEntityNotFoundException(
-            EntityNotFoundException e) {
+    @ExceptionHandler(ElementNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleElementNotFoundException(
+            ElementNotFoundException e) {
         Map<String, String> errors = new HashMap<>();
 
         errors.put("error", e.getMessage());
@@ -72,9 +71,9 @@ public class CustomGlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(
-            IllegalArgumentException e) {
+    @ExceptionHandler(IncorrectArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIncorrectArgumentException(
+            IncorrectArgumentException e) {
         Map<String, String> errors = new HashMap<>();
 
         errors.put("error", e.getMessage());
