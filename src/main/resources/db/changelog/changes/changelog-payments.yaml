@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1735908195008-2
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_payments
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rental_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: amount_to_pay
+                  type: DECIMAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: session_url
+                  type: VARCHAR(500)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: session_id
+                  type: VARCHAR(255)
+            tableName: payments
+  - changeSet:
+      id: 1735908195008-6
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: rental_id
+            constraintName: uc_payments_rental
+            tableName: payments
+  - changeSet:
+      id: 1735908195008-8
+      author: mkUser
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: rental_id
+            baseTableName: payments
+            constraintName: FK_PAYMENTS_ON_RENTAL
+            referencedColumnNames: id
+            referencedTableName: rentals
